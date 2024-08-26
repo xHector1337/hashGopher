@@ -8,7 +8,10 @@ import (
 	"crypto/sha512"
 	"encoding/hex"
 	"fmt"
+	"github.com/htruong/go-md2"
 	"golang.org/x/crypto/bcrypt"
+	"golang.org/x/crypto/md4"
+	"golang.org/x/crypto/sha3"
 	"os"
 )
 
@@ -31,9 +34,28 @@ func sha256Returner(text string) string {
 	hash.Write([]byte(text))
 	return hex.EncodeToString(hash.Sum(nil))
 }
-
+func sha224Returner(text string) string {
+	var hash = sha256.New224()
+	hash.Write([]byte(text))
+	return hex.EncodeToString(hash.Sum(nil))
+}
+func md2Returner(text string) string {
+	var hash = md2.New()
+	hash.Write([]byte(text))
+	return hex.EncodeToString(hash.Sum(nil))
+}
 func sha512Returner(text string) string {
 	var hash = sha512.New()
+	hash.Write([]byte(text))
+	return hex.EncodeToString(hash.Sum(nil))
+}
+func sha3Returner(text string) string {
+	var hash = sha3.New256()
+	hash.Write([]byte(text))
+	return hex.EncodeToString(hash.Sum(nil))
+}
+func md4Returner(text string) string {
+	var hash = md4.New()
 	hash.Write([]byte(text))
 	return hex.EncodeToString(hash.Sum(nil))
 }
@@ -52,10 +74,14 @@ func Bruteforcer(text string, path string) int {
 		if fiveonetwo == text {
 			fmt.Printf("Found the password: %s", s.Text())
 			return 0
-
 		}
 		var mdfive = md5Returner(s.Text())
 		if mdfive == text {
+			fmt.Printf("Found the password: %s", s.Text())
+			return 0
+		}
+		var mdfour = md4Returner(s.Text())
+		if mdfour == text {
 			fmt.Printf("Found the password: %s", s.Text())
 			return 0
 		}
@@ -74,56 +100,67 @@ func Bruteforcer(text string, path string) int {
 			fmt.Printf("Found the password: %s", s.Text())
 			return 0
 		}
+		var three = sha3Returner(s.Text())
+		if three == text {
+			fmt.Printf("Found the password: %s", s.Text())
+			return 0
+		}
+		var twotwofour = sha224Returner(s.Text())
+		if twotwofour == text {
+			fmt.Printf("Found the password: %s", s.Text())
+			return 0
+		}
+		var mdtwo = md2Returner(s.Text())
+		if mdtwo == text {
+			fmt.Printf("Found the password: %s", s.Text())
+			return 0
+		}
 	}
 	fmt.Println("We couldn't find anything.")
 	return 1
 }
 
-func FileBruteForcer(path string, wordlist string) int {
+func FileBruteForcer(path string, wordlist string) {
 	var f, err = os.Open(wordlist)
 	if err != nil {
 		fmt.Printf("%v", err)
-		return 1
+		return
 	}
 	defer f.Close()
 	var h, err1 = os.Open(path)
 	if err1 != nil {
 		fmt.Println(err1)
-		return 1
+		return
 	}
 	defer h.Close()
-	var word = bufio.NewScanner(f)
+
 	var hash = bufio.NewScanner(h)
 	for hash.Scan() {
+		f.Seek(0, 0)
+		var word = bufio.NewScanner(f)
 		for word.Scan() {
 			var fiveonetwo = sha512Returner(word.Text())
 			if fiveonetwo == hash.Text() {
 				fmt.Printf("We have found %s : %s\n", hash.Text(), word.Text())
-				return 0
-			}
-			var one = sha1Returner(word.Text())
-			if one == hash.Text() {
+			} else if one := sha1Returner(word.Text()); one == hash.Text() {
 				fmt.Printf("We have found %s : %s\n", hash.Text(), word.Text())
-				return 0
-			}
-			var five = md5Returner(word.Text())
-			if five == hash.Text() {
+			} else if five := md5Returner(word.Text()); five == hash.Text() {
 				fmt.Printf("We have found %s : %s\n", hash.Text(), word.Text())
-				return 0
-			}
-			var twofivesix = sha256Returner(word.Text())
-			if twofivesix == hash.Text() {
+			} else if twofivesix := sha256Returner(word.Text()); twofivesix == hash.Text() {
 				fmt.Printf("We have found %s : %s\n", hash.Text(), word.Text())
-				return 0
-			}
-			if bcryptChecker(hash.Text(), word.Text()) {
+			} else if bcryptChecker(hash.Text(), word.Text()) {
 				fmt.Printf("We have found %s : %s\n", hash.Text(), word.Text())
-				return 0
+			} else if three := sha3Returner(word.Text()); three == word.Text() {
+				fmt.Printf("We have found %s : %s\n", hash.Text(), word.Text())
+			} else if mdfour := md4Returner(word.Text()); mdfour == word.Text() {
+				fmt.Printf("We have found %s : %s\n", hash.Text(), word.Text())
+			} else if twotwofour := sha224Returner(word.Text()); twotwofour == word.Text() {
+				fmt.Printf("We have found %s : %s\n", hash.Text(), word.Text())
+			} else if mdtwo := md2Returner(word.Text()); mdtwo == word.Text() {
+				fmt.Printf("We have found %s : %s\n", hash.Text(), word.Text())
 			}
 		}
 	}
-	fmt.Printf("We couldn't find anything.\n")
-	return 1
 }
 
 func main() {
