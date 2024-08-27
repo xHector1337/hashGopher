@@ -8,6 +8,7 @@ import (
 	"crypto/sha512"
 	"encoding/hex"
 	"fmt"
+	"github.com/c0mm4nd/go-ripemd"
 	"github.com/htruong/go-md2"
 	"golang.org/x/crypto/bcrypt"
 	"golang.org/x/crypto/md4"
@@ -49,8 +50,23 @@ func sha512Returner(text string) string {
 	hash.Write([]byte(text))
 	return hex.EncodeToString(hash.Sum(nil))
 }
-func sha3Returner(text string) string {
+func sha3256Returner(text string) string {
 	var hash = sha3.New256()
+	hash.Write([]byte(text))
+	return hex.EncodeToString(hash.Sum(nil))
+}
+func sha3512Returner(text string) string {
+	var hash = sha3.New512()
+	hash.Write([]byte(text))
+	return hex.EncodeToString(hash.Sum(nil))
+}
+func sha3224Returner(text string) string {
+	var hash = sha3.New224()
+	hash.Write([]byte(text))
+	return hex.EncodeToString(hash.Sum(nil))
+}
+func sha3384Returner(text string) string {
+	var hash = sha3.New384()
 	hash.Write([]byte(text))
 	return hex.EncodeToString(hash.Sum(nil))
 }
@@ -59,7 +75,31 @@ func md4Returner(text string) string {
 	hash.Write([]byte(text))
 	return hex.EncodeToString(hash.Sum(nil))
 }
-
+func sha384Returner(text string) string {
+	var hash = sha512.New384()
+	hash.Write([]byte(text))
+	return hex.EncodeToString(hash.Sum(nil))
+}
+func ripemd160Returner(text string) string {
+	var hash = ripemd.New160()
+	hash.Write([]byte(text))
+	return hex.EncodeToString(hash.Sum(nil))
+}
+func ripemd128Returner(text string) string {
+	var hash = ripemd.New128()
+	hash.Write([]byte(text))
+	return hex.EncodeToString(hash.Sum(nil))
+}
+func ripemd256Returner(text string) string {
+	var hash = ripemd.New256()
+	hash.Write([]byte(text))
+	return hex.EncodeToString(hash.Sum(nil))
+}
+func ripemd320Returner(text string) string {
+	var hash = ripemd.New320()
+	hash.Write([]byte(text))
+	return hex.EncodeToString(hash.Sum(nil))
+}
 func Bruteforcer(text string, path string) int {
 	var file, err = os.Open(path)
 	if err != nil {
@@ -100,8 +140,8 @@ func Bruteforcer(text string, path string) int {
 			fmt.Printf("Found the password: %s", s.Text())
 			return 0
 		}
-		var three = sha3Returner(s.Text())
-		if three == text {
+		var threetwofivesix = sha3256Returner(s.Text())
+		if threetwofivesix == text {
 			fmt.Printf("Found the password: %s", s.Text())
 			return 0
 		}
@@ -114,6 +154,41 @@ func Bruteforcer(text string, path string) int {
 		if mdtwo == text {
 			fmt.Printf("Found the password: %s", s.Text())
 			return 0
+		}
+		var threeightfour = sha384Returner(s.Text())
+		if threeightfour == text {
+			fmt.Printf("Found the password: %s", s.Text())
+			return 0
+		}
+		var threethreeeightfour = sha3384Returner(s.Text())
+		if threethreeeightfour == text {
+			fmt.Printf("Found the password: %s", s.Text())
+			return 0
+		}
+		var threefiveonetwo = sha3512Returner(s.Text())
+		if threefiveonetwo == text {
+			fmt.Printf("Found the password: %s", s.Text())
+			return 0
+		}
+		var threetwotwofour = sha3224Returner(s.Text())
+		if threetwotwofour == text {
+			fmt.Printf("Found the password: %s", s.Text())
+		}
+		var ripemdonesixzero = ripemd160Returner(s.Text())
+		if ripemdonesixzero == text {
+			fmt.Printf("Found the password: %s", s.Text())
+		}
+		var ripemdonetwoeight = ripemd128Returner(s.Text())
+		if ripemdonetwoeight == text {
+			fmt.Printf("Found the password: %s", s.Text())
+		}
+		var ripemdtwofivesix = ripemd256Returner(s.Text())
+		if ripemdtwofivesix == text {
+			fmt.Printf("Found the password: %s", s.Text())
+		}
+		var ripemdthreetwozero = ripemd320Returner(s.Text())
+		if ripemdthreetwozero == text {
+			fmt.Printf("Found the password: %s", s.Text())
 		}
 	}
 	fmt.Println("We couldn't find anything.")
@@ -150,13 +225,29 @@ func FileBruteForcer(path string, wordlist string) {
 				fmt.Printf("We have found %s : %s\n", hash.Text(), word.Text())
 			} else if bcryptChecker(hash.Text(), word.Text()) {
 				fmt.Printf("We have found %s : %s\n", hash.Text(), word.Text())
-			} else if three := sha3Returner(word.Text()); three == word.Text() {
+			} else if threetwofivesix := sha3256Returner(word.Text()); threetwofivesix == hash.Text() {
 				fmt.Printf("We have found %s : %s\n", hash.Text(), word.Text())
-			} else if mdfour := md4Returner(word.Text()); mdfour == word.Text() {
+			} else if mdfour := md4Returner(word.Text()); mdfour == hash.Text() {
 				fmt.Printf("We have found %s : %s\n", hash.Text(), word.Text())
-			} else if twotwofour := sha224Returner(word.Text()); twotwofour == word.Text() {
+			} else if twotwofour := sha224Returner(word.Text()); twotwofour == hash.Text() {
 				fmt.Printf("We have found %s : %s\n", hash.Text(), word.Text())
-			} else if mdtwo := md2Returner(word.Text()); mdtwo == word.Text() {
+			} else if mdtwo := md2Returner(word.Text()); mdtwo == hash.Text() {
+				fmt.Printf("We have found %s : %s\n", hash.Text(), word.Text())
+			} else if threeightfour := sha384Returner(word.Text()); threeightfour == hash.Text() {
+				fmt.Printf("We have found %s : %s\n", hash.Text(), word.Text())
+			} else if threethreeightfour := sha3384Returner(word.Text()); threethreeightfour == hash.Text() {
+				fmt.Printf("We have found %s : %s\n", hash.Text(), word.Text())
+			} else if threefiveonetwo := sha3512Returner(word.Text()); threefiveonetwo == hash.Text() {
+				fmt.Printf("We have found %s : %s\n", hash.Text(), word.Text())
+			} else if threetwotwofour := sha3224Returner(word.Text()); threetwotwofour == hash.Text() {
+				fmt.Printf("We have found %s : %s\n", hash.Text(), word.Text())
+			} else if ripemdonesixzero := ripemd160Returner(word.Text()); ripemdonesixzero == hash.Text() {
+				fmt.Printf("We have found %s : %s\n", hash.Text(), word.Text())
+			} else if ripemdonetwoeight := ripemd128Returner(word.Text()); ripemdonetwoeight == hash.Text() {
+				fmt.Printf("We have found %s : %s\n", hash.Text(), word.Text())
+			} else if ripemdtwofivesix := ripemd256Returner(word.Text()); ripemdtwofivesix == hash.Text() {
+				fmt.Printf("We have found %s : %s\n", hash.Text(), word.Text())
+			} else if ripemdthreetwozero := ripemd320Returner(word.Text()); ripemdthreetwozero == hash.Text() {
 				fmt.Printf("We have found %s : %s\n", hash.Text(), word.Text())
 			}
 		}
