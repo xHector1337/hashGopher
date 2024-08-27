@@ -9,9 +9,11 @@ import (
 	"encoding/hex"
 	"fmt"
 	"github.com/c0mm4nd/go-ripemd"
+	xxhash2 "github.com/cespare/xxhash"
 	"github.com/cxmcc/tiger"
 	"github.com/htruong/go-md2"
 	"github.com/jzelinskie/whirlpool"
+	"github.com/twmb/murmur3"
 	"golang.org/x/crypto/bcrypt"
 	"golang.org/x/crypto/blake2b"
 	"golang.org/x/crypto/md4"
@@ -142,6 +144,26 @@ func tiger2Returner(text string) string {
 	hash.Write([]byte(text))
 	return hex.EncodeToString(hash.Sum(nil))
 }
+func murmur332(text string) string {
+	var hash = murmur3.New32()
+	hash.Write([]byte(text))
+	return hex.EncodeToString(hash.Sum(nil))
+}
+func murmur364(text string) string {
+	var hash = murmur3.New64()
+	hash.Write([]byte(text))
+	return hex.EncodeToString(hash.Sum(nil))
+}
+func murmur3128(text string) string {
+	var hash = murmur3.New128()
+	hash.Write([]byte(text))
+	return hex.EncodeToString(hash.Sum(nil))
+}
+func xxhashReturner(text string) string {
+	var hash = xxhash2.New()
+	hash.Write([]byte(text))
+	return hex.EncodeToString(hash.Sum(nil))
+}
 func Bruteforcer(text string, path string) int {
 	var file, err = os.Open(path)
 	if err != nil {
@@ -152,6 +174,8 @@ func Bruteforcer(text string, path string) int {
 	var s = bufio.NewScanner(file)
 
 	for s.Scan() {
+		fmt.Printf("\033[H\033[2J")
+		fmt.Printf("Trying %s\n", s.Text())
 		var fiveonetwo = sha512Returner(s.Text())
 		if fiveonetwo == text {
 			fmt.Printf("Found the password: %s", s.Text())
@@ -267,6 +291,26 @@ func Bruteforcer(text string, path string) int {
 			fmt.Printf("Found the password: %s", s.Text())
 			return 0
 		}
+		var murmursixytfour = murmur364(s.Text())
+		if murmursixytfour == text {
+			fmt.Printf("Found the password: %s", s.Text())
+			return 0
+		}
+		var murmurthirtytwo = murmur332(s.Text())
+		if murmurthirtytwo == text {
+			fmt.Printf("Found the password: %s", s.Text())
+			return 0
+		}
+		var murmuronetwoeight = murmur3128(s.Text())
+		if murmuronetwoeight == text {
+			fmt.Printf("Found the password: %s", s.Text())
+			return 0
+		}
+		var xxh = xxhashReturner(s.Text())
+		if xxh == text {
+			fmt.Printf("Found the password: %s", s.Text())
+			return 0
+		}
 	}
 	fmt.Println("We couldn't find anything.")
 	return 1
@@ -359,6 +403,11 @@ func FileBruteForcer(path string, wordlist string) {
 				fmt.Printf("We have found %s : %s\n", hash.Text(), word.Text())
 				break
 			} else if tiger2 := tiger2Returner(word.Text()); tiger2 == hash.Text() {
+				fmt.Printf("We have found %s : %s\n", hash.Text(), word.Text())
+				break
+			} else if murmursixytyfour := murmur364(word.Text()); murmursixytyfour == hash.Text() {
+				fmt.Printf("We have found %s : %s\n")
+			} else if xxh := xxhashReturner(word.Text()); xxh == hash.Text() {
 				fmt.Printf("We have found %s : %s\n", hash.Text(), word.Text())
 				break
 			}
