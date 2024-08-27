@@ -9,8 +9,11 @@ import (
 	"encoding/hex"
 	"fmt"
 	"github.com/c0mm4nd/go-ripemd"
+	"github.com/cxmcc/tiger"
 	"github.com/htruong/go-md2"
+	"github.com/jzelinskie/whirlpool"
 	"golang.org/x/crypto/bcrypt"
+	"golang.org/x/crypto/blake2b"
 	"golang.org/x/crypto/md4"
 	"golang.org/x/crypto/sha3"
 	"os"
@@ -100,6 +103,45 @@ func ripemd320Returner(text string) string {
 	hash.Write([]byte(text))
 	return hex.EncodeToString(hash.Sum(nil))
 }
+func whirlpoolReturner(text string) string {
+	var hash = whirlpool.New()
+	hash.Write([]byte(text))
+	return hex.EncodeToString(hash.Sum(nil))
+}
+func blake2b256Returner(text string) string {
+	var hash, err = blake2b.New256(nil)
+	if err != nil {
+		panic(err)
+	}
+	hash.Write([]byte(text))
+	return hex.EncodeToString(hash.Sum(nil))
+}
+func blake2b512Returner(text string) string {
+	var hash, err = blake2b.New512(nil)
+	if err != nil {
+		panic(err)
+	}
+	hash.Write([]byte(text))
+	return hex.EncodeToString(hash.Sum(nil))
+}
+func blake2b384Returner(text string) string {
+	var hash, err = blake2b.New384(nil)
+	if err != nil {
+		panic(err)
+	}
+	hash.Write([]byte(text))
+	return hex.EncodeToString(hash.Sum(nil))
+}
+func tigerReturner(text string) string {
+	var hash = tiger.New()
+	hash.Write([]byte(text))
+	return hex.EncodeToString(hash.Sum(nil))
+}
+func tiger2Returner(text string) string {
+	var hash = tiger.New2()
+	hash.Write([]byte(text))
+	return hex.EncodeToString(hash.Sum(nil))
+}
 func Bruteforcer(text string, path string) int {
 	var file, err = os.Open(path)
 	if err != nil {
@@ -173,22 +215,57 @@ func Bruteforcer(text string, path string) int {
 		var threetwotwofour = sha3224Returner(s.Text())
 		if threetwotwofour == text {
 			fmt.Printf("Found the password: %s", s.Text())
+			return 0
 		}
 		var ripemdonesixzero = ripemd160Returner(s.Text())
 		if ripemdonesixzero == text {
 			fmt.Printf("Found the password: %s", s.Text())
+			return 0
 		}
 		var ripemdonetwoeight = ripemd128Returner(s.Text())
 		if ripemdonetwoeight == text {
 			fmt.Printf("Found the password: %s", s.Text())
+			return 0
 		}
 		var ripemdtwofivesix = ripemd256Returner(s.Text())
 		if ripemdtwofivesix == text {
 			fmt.Printf("Found the password: %s", s.Text())
+			return 0
 		}
 		var ripemdthreetwozero = ripemd320Returner(s.Text())
 		if ripemdthreetwozero == text {
 			fmt.Printf("Found the password: %s", s.Text())
+			return 0
+		}
+		var blake2bthreightfour = blake2b384Returner(s.Text())
+		if blake2bthreightfour == text {
+			fmt.Printf("Found the password: %s", s.Text())
+			return 0
+		}
+		var whirlPool = whirlpoolReturner(s.Text())
+		if whirlPool == text {
+			fmt.Printf("Found the password: %s", s.Text())
+			return 0
+		}
+		var blake2bfiveonesix = blake2b512Returner(s.Text())
+		if blake2bfiveonesix == text {
+			fmt.Printf("Found the password: %s", s.Text())
+			return 0
+		}
+		var blake2btwofivesix = blake2b256Returner(s.Text())
+		if blake2btwofivesix == text {
+			fmt.Printf("Found the password: %s", s.Text())
+			return 0
+		}
+		var tiger2 = tiger2Returner(s.Text())
+		if tiger2 == text {
+			fmt.Printf("Found the password: %s", s.Text())
+			return 0
+		}
+		var tiger1 = tigerReturner(s.Text())
+		if tiger1 == text {
+			fmt.Printf("Found the password: %s", s.Text())
+			return 0
 		}
 	}
 	fmt.Println("We couldn't find anything.")
@@ -217,38 +294,73 @@ func FileBruteForcer(path string, wordlist string) {
 			var fiveonetwo = sha512Returner(word.Text())
 			if fiveonetwo == hash.Text() {
 				fmt.Printf("We have found %s : %s\n", hash.Text(), word.Text())
+				break
 			} else if one := sha1Returner(word.Text()); one == hash.Text() {
 				fmt.Printf("We have found %s : %s\n", hash.Text(), word.Text())
+				break
 			} else if five := md5Returner(word.Text()); five == hash.Text() {
 				fmt.Printf("We have found %s : %s\n", hash.Text(), word.Text())
+				break
 			} else if twofivesix := sha256Returner(word.Text()); twofivesix == hash.Text() {
 				fmt.Printf("We have found %s : %s\n", hash.Text(), word.Text())
+				break
 			} else if bcryptChecker(hash.Text(), word.Text()) {
 				fmt.Printf("We have found %s : %s\n", hash.Text(), word.Text())
+				break
 			} else if threetwofivesix := sha3256Returner(word.Text()); threetwofivesix == hash.Text() {
 				fmt.Printf("We have found %s : %s\n", hash.Text(), word.Text())
+				break
 			} else if mdfour := md4Returner(word.Text()); mdfour == hash.Text() {
 				fmt.Printf("We have found %s : %s\n", hash.Text(), word.Text())
+				break
 			} else if twotwofour := sha224Returner(word.Text()); twotwofour == hash.Text() {
 				fmt.Printf("We have found %s : %s\n", hash.Text(), word.Text())
+				break
 			} else if mdtwo := md2Returner(word.Text()); mdtwo == hash.Text() {
 				fmt.Printf("We have found %s : %s\n", hash.Text(), word.Text())
+				break
 			} else if threeightfour := sha384Returner(word.Text()); threeightfour == hash.Text() {
 				fmt.Printf("We have found %s : %s\n", hash.Text(), word.Text())
+				break
 			} else if threethreeightfour := sha3384Returner(word.Text()); threethreeightfour == hash.Text() {
 				fmt.Printf("We have found %s : %s\n", hash.Text(), word.Text())
+				break
 			} else if threefiveonetwo := sha3512Returner(word.Text()); threefiveonetwo == hash.Text() {
 				fmt.Printf("We have found %s : %s\n", hash.Text(), word.Text())
+				break
 			} else if threetwotwofour := sha3224Returner(word.Text()); threetwotwofour == hash.Text() {
 				fmt.Printf("We have found %s : %s\n", hash.Text(), word.Text())
+				break
 			} else if ripemdonesixzero := ripemd160Returner(word.Text()); ripemdonesixzero == hash.Text() {
 				fmt.Printf("We have found %s : %s\n", hash.Text(), word.Text())
+				break
 			} else if ripemdonetwoeight := ripemd128Returner(word.Text()); ripemdonetwoeight == hash.Text() {
 				fmt.Printf("We have found %s : %s\n", hash.Text(), word.Text())
+				break
 			} else if ripemdtwofivesix := ripemd256Returner(word.Text()); ripemdtwofivesix == hash.Text() {
 				fmt.Printf("We have found %s : %s\n", hash.Text(), word.Text())
+				break
 			} else if ripemdthreetwozero := ripemd320Returner(word.Text()); ripemdthreetwozero == hash.Text() {
 				fmt.Printf("We have found %s : %s\n", hash.Text(), word.Text())
+				break
+			} else if w := whirlpoolReturner(word.Text()); w == hash.Text() {
+				fmt.Printf("We have found %s : %s\n", hash.Text(), word.Text())
+				break
+			} else if blake2bthreeightfour := blake2b384Returner(word.Text()); blake2bthreeightfour == hash.Text() {
+				fmt.Printf("We have found %s : %s\n", hash.Text(), word.Text())
+				break
+			} else if blake2btwofivesix := blake2b256Returner(word.Text()); blake2btwofivesix == hash.Text() {
+				fmt.Printf("We have found %s : %s\n", hash.Text(), word.Text())
+				break
+			} else if blake2bfiveonetwo := blake2b512Returner(word.Text()); blake2bfiveonetwo == hash.Text() {
+				fmt.Printf("We have found %s : %s\n", hash.Text(), word.Text())
+				break
+			} else if tiger1 := tigerReturner(word.Text()); tiger1 == hash.Text() {
+				fmt.Printf("We have found %s : %s\n", hash.Text(), word.Text())
+				break
+			} else if tiger2 := tiger2Returner(word.Text()); tiger2 == hash.Text() {
+				fmt.Printf("We have found %s : %s\n", hash.Text(), word.Text())
+				break
 			}
 		}
 	}
