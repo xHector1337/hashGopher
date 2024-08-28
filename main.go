@@ -19,6 +19,7 @@ import (
 	"golang.org/x/crypto/md4"
 	"golang.org/x/crypto/sha3"
 	"os"
+	"time"
 )
 
 func md5Returner(text string) string {
@@ -174,8 +175,8 @@ func Bruteforcer(text string, path string) int {
 	var s = bufio.NewScanner(file)
 
 	for s.Scan() {
-		fmt.Printf("\033[H\033[2J")
-		fmt.Printf("Trying %s\n", s.Text())
+		//fmt.Printf("\033[H\033[2J")
+		//fmt.Printf("Trying %s\n", s.Text())
 		var fiveonetwo = sha512Returner(s.Text())
 		if fiveonetwo == text {
 			fmt.Printf("Found the password: %s", s.Text())
@@ -416,10 +417,13 @@ func FileBruteForcer(path string, wordlist string) {
 }
 
 func main() {
+	currentTime := time.Now()
 	if len(os.Args) == 4 {
 		FileBruteForcer(os.Args[2], os.Args[3])
+		fmt.Printf("\nStarted at %v\nTook %v seconds\n", currentTime, time.Since(currentTime).Seconds())
 	} else if len(os.Args) == 3 {
 		Bruteforcer(os.Args[1], os.Args[2])
+		fmt.Printf("\nStarted at %v\nTook %v seconds\n", currentTime, time.Since(currentTime).Seconds())
 	} else {
 		fmt.Printf("Usage:\n%s <hash> <wordlistFilePath>\nor\n%s file <hashFilePath> <wordlistFilePath>", os.Args[0], os.Args[0])
 	}
