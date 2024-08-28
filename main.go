@@ -175,8 +175,8 @@ func Bruteforcer(text string, path string) int {
 	var s = bufio.NewScanner(file)
 
 	for s.Scan() {
-		//fmt.Printf("\033[H\033[2J")
-		//fmt.Printf("Trying %s\n", s.Text())
+		fmt.Printf("\033[H\033[2J")
+		fmt.Printf("Trying %s\n", s.Text())
 		var fiveonetwo = sha512Returner(s.Text())
 		if fiveonetwo == text {
 			fmt.Printf("Found the password: %s", s.Text())
