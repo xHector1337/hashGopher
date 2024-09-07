@@ -1,3 +1,4 @@
+![Ekran görüntüsü 2024-09-07 165456](https://github.com/user-attachments/assets/3dedd3ed-5474-48cb-be26-af885e378dc8)
 HashGopher is a basic hashcat clone made in Go.
 
 ## Installation
